@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>Semi-Supervised Few-Shot Learning with Prototypical Random Walks</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="img/seal_icon.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    <script src="js/app.js"></script>
+</head>
+
+<body>
+<div class="container" id="main">
+    <div class="row">
+
+        <h2 class="col-md-12 text-center" style="padding-bottom:20px">
+
+            <b>Semi-Supervised Few-Shot Learning with Prototypical Random Walks</br></b>
+            <span style="font-size:18pt"> AAAI 2021 MetaLern Workshop Oral </span>
+            <br>
+        </h2>
+
+    </div>
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <ul class="list-inline" style="font-size:18pt">
+                <li>
+                    <a href="https://github.com/AhmedAyad89">
+                        Ahmed Ayyad
+                    </a>
+                    </br>Technical University Munich
+                </li>
+                <li>
+                    <a href="http://liyc.fun">
+                        Yuchen Li
+                    </a>
+                    </br>KAUST
+                </li>
+                <li>
+                    <a href="https://radenmuaz.github.io/">
+                        Raden Muaz
+                    </a>
+                    </br>KAUST
+                </li>
+
+                <br>
+                <li>
+                    <a href="https://albarqouni.github.io/">
+                        Shadi Albarqouni
+                    </a>
+                    </br>TU Munich | Helmholtz AI
+                </li>
+                <li>
+                    <a href="http://www.mohamed-elhoseiny.com/">
+                        Mohamed Elhoseiny
+                    </a>
+                    </br>KAUST
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="row" style="padding-top:45px">
+        <div class="col-md-6 col-md-offset-3 text-center">
+            <ul class="nav nav-pills nav-justified">
+                <li>
+                    <a href="https://www.ecva.net/papers/eccv_2020/papers_ECCV/papers/123460409.pdf">
+                        <h4><strong>[ Paper ]</strong></h4>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://github.com/prototypical-random-walk/prototypical-random-walk">
+                        <h4><strong>[ Code ]</strong></h4>
+                    </a>
+                </li>
+                <li>
+                    <a href="#dataset">
+                        <h4><strong>[ Dataset ]</strong></h4>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="row" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Abstract</b>
+            </h3>
+            <p class="text-justify">
+            </p>
+            <p class="text-justify"> Recent progress has shown that few-shot learning can be improved with access to
+                unlabelled data, known as semi-supervised few-shot learning (SS-FSL). We introduce an SS-FSL approach,
+                dubbed as Prototypical Random Walk Networks (PRWN), built on top of Prototypical Networks (PN). We
+                develop a random walk semi-supervised loss that enables the network to learn representations that are
+                compact and well-separated. Our work is related to the very recent development on graph-based approaches
+                for few-shot learning. However, we show that compact and well-separated class representations can be
+                achieved by modeling our prototypical random walk notion without needing additional graph-NN parameters
+                or requiring a transductive setting where a collective test set is provided. Our model outperforms prior
+                art in most benchmarks with significant improvements in some cases. Our model, trained with 40 % of the
+                data as labeled, compares competitively against fully supervised prototypical networks, trained on 100 %
+                of the labels, even outperforming it in the 1-shot mini-Imagenet case with 50.89 % to 49.4 % accuracy.
+                We also show that our model is resistant to distractors, unlabeled data that does not belong to any of
+                the training classes, and hence reflecting robustness to labeled / unlabelled class distribution
+                mismatch.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="row" id="toy_example" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Toy Example</b>
+            </h3>
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <figure>
+                <img src="img/figure.jpg" style="padding-bottom:10px" class="img-responsive" alt="overview">
+                <figcaption>
+                </figcaption>
+            </figure>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            Here is the toy example on 2D synthetic datasets. We performed experiments on these datasets
+            (spiral and Gaussian circles) to visualize how the decision boundary is formed.
+            The model is 3-layer MLP, 2-dimension input, 32-dimension hidden unit, 4-dimension output.
+            It used negative Euclidean distance metric for its output. We used two datasets,
+            and 3 models trained 300 epochs in each dataset: (1) Spiral dataset with 1000 points split to 7 labels
+            (10% labels + Random Walk, 10% labels, and 100% labels; 1 shot, 5 way, τ = 1);
+            (2) Gaussian circle dataset 1000 points split to 3 labels. There were 3 models trained in each dataset (5%
+            labels + Random Walk, 5% labels, and 5% labels; 1 shot 3 way, τ = 1
+            ) ;
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            <br>Above Figure shows the results, it can be seen that the proposed method can “connect the dots” of unlabeled
+            points in green region and purple region, hence producing decision boundary similar to 100% labels. In
+            Gaussian circle dataset, random walk loss helps the model fits the circle more in just few epochs, but the
+            model without random walk loss still has many
+            mis-classified points and the circular outline is not obvious.
+        </div>
+<!--            <video id="v0" width="100%" loop="" muted="" controls="">-->
+<!--                <source src="img/hi_res.mp4" type="video/mp4">-->
+<!--&lt;!&ndash;            </video>&ndash;&gt;-->
+<!--            <iframe width="100%" height="400"-->
+<!--                src="https://www.youtube.com/embed/yEdf24hF_sY">-->
+<!--            </iframe>-->
+
+
+
+    </div>
+
+    <div class="row" id="dataset" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Dataset</b>
+            </h3>
+            <ul>
+                <li> You can download <b>Omniglot</b> <a href="https://drive.google.com/open?id=1INlOTyPtnCJgm0hBVvtRLu5a0itk8bjs">here</a> (9.3MB) </li>
+                <li> You can download <b>miniImageNet</b> <a href="https://drive.google.com/open?id=16V_ZlkW4SsnNDtnGmaBRq2OoPmUOc5mY">here</a> (1.1GB) </li>
+                <li> You can download <b>tieredImageNet</b> <a href="https://drive.google.com/open?id=1g1aIDy2Ar_MViF2gDXFYDBTR-HYecV07">here</a> (12.9GB)</li>
+            </ul>
+            <br>
+        </div>
+    </div>
+
+    <div class="row" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Methodology: Prototypical Random Walks</b>
+            </h3>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            <figure>
+                <img src="img/method.png" style="padding-bottom:10px" class="img-responsive" alt="overview">
+                    <figcaption>
+                    </figcaption>
+            </figure>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            Our PRW aims at maximizing the probability of a random walk begins at the class prototype pj , taking τ steps among the
+            unlabeled data, before it lands to the same class prototype. This results in a more discriminative representation, where the embedding of
+            the unlabeled data of a particular class got magnetized to its corresponding class prototype, denoted as prototypical magnetization.
+        </div>
+    </div>
+
+
+    <div class="row" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Qualitative Results</b>
+            </h3>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+            <figure>
+                <img src="img/listener_qualitative_res.png" style="padding-bottom:10px" class="img-responsive" alt="overview">
+                <figcaption>
+                </figcaption>
+            </figure>
+        </div>
+
+        <div class="col-md-8 col-md-offset-2">
+        </div>
+        <div class="col-md-8 col-md-offset-2">
+            For experiments without semi-supervised adaptation, we
+            observe from the third horizontal section of Table 1, that
+            Prototypical Random Walks Network (PRWN) improves on the previous state-of-the-art MetaGAN (Zhang et al., 2018), and EGNN-Semi (Kim et al.,
+            2019) on all experiments, with a significant improvement
+            on 5-shot mini-imagenet. It is worth mentioning that our
+            PRWN has less than half the trainable parameters of MetaGAN which empolys an additional larger generator.
+            Experiments with semi-supervised adaptation are presented
+            in bottom section in Table 1. Note that PRWN already improves on prior art without the adaptation. With the
+            added
+            semi-supervised adaptation, PRWN improves significantly,
+            and the gap widens. On the 5-shot mini-imagenet task,
+            PRWN achieves a relative improvement of 8.17%, 4.86%,
+            and 8.28% over the previous state-of-the-art, (Ren et al.,
+            2018; Liu et al., 2019; Kim et al., 2019), respectively. Similar behavior has been observed on
+            tiered-ImageNet dataset
+            outperforming existing methods in 1-shot classification and
+            similar performance on 5-shot classification; note that standard deviation for (Kim et al., 2019) is not
+            reported for 1-shot and 5-shot classification.
+        </div>
+    </div>
+
+    <div class="row" id="citation" style="padding-bottom:30px">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                <b>Citation</b>
+            </h3>
+            If you find our work useful in your research, please consider citing:
+<pre class="w3-panel w3-leftbar w3-light-grey">
+@article{Ahmed2020prw,
+    title={Semi-Supervised Few-Shot Learning with Prototypical Random Walks},
+    author={Ayyad, Ahmed and Li, Yuchen and Muaz, Raden and Albarqouni, Shadi and Elhoseiny, Mohamed},
+    journal={35th AAAI Conference on Artificial Intelligence (AAAI)},
+    year={2021}
+}</pre>
+        </div>
+    </div>
+
+<!--    <div class="row" id="benchmark" style="padding-bottom:30px">-->
+<!--        <div class="col-md-8 col-md-offset-2">-->
+<!--            <h3>-->
+<!--                <b>ReferIt3D Benchmark Challenge</b>-->
+<!--            </h3>-->
+<!--            Coming soon!-->
+<!--        </div>-->
+
+<!--    </div>-->
+
+
+<!--    <div class="row" style="padding-bottom:30px">-->
+<!--        <div class="col-md-8 col-md-offset-2">-->
+<!--            <h3>-->
+<!--                <b>Acknowledgements</b>-->
+<!--            </h3>-->
+<!--            <p class="text-justify">-->
+<!--                The authors wish to acknowledge the support of a Vannevar Bush Faculty Fellowship, a grant from the-->
+<!--                Samsung GRO program and the Stanford SAIL Toyota Research Center, NSF grant IIS-1763268, KAUST grant-->
+<!--                BAS/1/1685-01-01, and a research gift from Amazon Web Services. The website template was borrowed from-->
+<!--                <a href="http://mgharbi.com/">Michaël Gharbi</a>.-->
+<!--            </p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+    </div>
+        <script type='text/javascript' id='clustrmaps' src='//cdn.clustrmaps.com/map_v2.js?cl=080808&w=110&t=tt&d=_kJ7hJdlh3UTdIJueDububmhQbOOTRZpo-A1RUHuEqU&co=ffffff&cmo=3acc3a&cmn=ff5353&ct=808080'></script>
+    </body>
+
+</html>
